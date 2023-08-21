@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script>
+        var loginAttempts = parseInt(localStorage.getItem("loginAttempts")) || 0;
+
+
+        var gRecaptchaResponse = ""; // Initialize the reCAPTCHA response variable
+
+        function onCaptchaCompleted(response) {
+            gRecaptchaResponse = response;
+        }
+
+        function validateForm() {
+            if (loginAttempts >= 3 && gRecaptchaResponse === "") {
+                alert("Please complete the Captcha.");
+                return false; // Prevent form submission
+            }
+            // You can add additional form validation logic here if needed
+            return true; // Allow form submission
+        }
+        function incrementLoginAttempts() {
+            loginAttempts++;
+            updateLoginAttemptsDisplay();
+
+            if (loginAttempts === 3) {
+                // Display the Captcha after 3 login attempts
+                document.getElementById("captchaContainer").style.display = "block";
+            }
+        }
+
+
+        function resetLoginAttempts() {
+            loginAttempts = 0;
+            localStorage.setItem("loginAttempts", loginAttempts);
+            updateLoginAttemptsDisplay();
+            document.getElementById("captchaContainer").style.display = "none"; // Hide Captcha on reset
+        }
+
+        function updateLoginAttemptsDisplay() {
+            document.getElementById("loginAttemptsCount").textContent = "Bejelentkezési kísérletek: " + loginAttempts;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            updateLoginAttemptsDisplay();
+            if (loginAttempts >= 3) {
+                document.getElementById("captchaContainer").style.display = "block";
+            }
+        });
+    </script>
+</head>
+<body>
+<div th:if="${param.error}">
+    Érvénytelen felhasználónév vagy jelszó.
+</div>
+<div th:if="${param.logout}">
+    Kiléptél a rendszerből.
+</div>
+
+<form th:action="@{/login}" method="post" onsubmit="return validateForm()">
+    <div><label> Felhasználónév : <input type="text" name="username" id="username" required /> </label></div>
+    <div><label> Jelszó: <input type="password" name="password" id="password" required /> </label></div>
+
+    <div id="captchaContainer" style="display: none;">
+        <div class="g-recaptcha" data-sitekey="6LdH-L4nAAAAAJBHk5Vlk19aK2vk04-GKOjIwnbK" data-callback="onCaptchaCompleted"></div>
+    </div>
+    <div>
+        <input type="submit" value="Bejelentkezés" id="loginButton" onclick="incrementLoginAttempts()" />
+    </div>
+</form>
+
+<div>
+    <p id="loginAttemptsCount">Bejelentkezési kísérletek: 0</p>
+</div>
+<button onclick="window.location.href = '/register'">Regisztráció</button>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</body>
+</html>

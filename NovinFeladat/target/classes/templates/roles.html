@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Role List</title>
+</head>
+<body>
+<h1>Role List</h1>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="role : ${roles}">
+        <td th:text="${role.id}"></td>
+        <td th:text="${role.name}"></td>
+        <td th:text="${role.description}"></td>
+        <td>
+            <form th:action="@{/delete/Role}" method="post">
+                <input type="hidden" name="roleId" th:value="${role.id}">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
