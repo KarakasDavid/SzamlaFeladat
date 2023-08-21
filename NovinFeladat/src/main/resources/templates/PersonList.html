@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Person List</title>
+</head>
+<head>
+    <title>Receipt List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<h1>Person List</h1>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Roles</th>
+        <th>Action</th>
+    </tr>
+    <tr th:each="person : ${persons}">
+        <td th:text="${person.id}"></td>
+        <td th:text="${person.username}"></td>
+
+        <td>
+            <span th:each="role, iterStat : ${person.roles}" th:if="${not #lists.isEmpty(person.roles)}">
+                <span th:text="${role.name}"></span>
+                <span th:unless="${iterStat.last}">, </span>
+                <span th:unless="${iterStat.last}">&nbsp;</span>
+            </span>
+        </td>
+
+        <td>
+            <form th:action="@{/updateRole}" method="post">
+                <input type="hidden" name="personId" th:value="${person.id}"/>
+
+                <div th:each="role : ${roles}">
+                    <label>
+                        <input type="checkbox" name="roleIds" th:value="${role.id}"
+                               th:checked="${person.roles.contains(role)}"/>
+                        <span th:text="${role.name}"></span>
+                    </label>
+                </div>
+
+                <button type="submit">Update Roles</button>
+            </form>
+        </td>
+
+
+
+        <td>
+            <form th:action="@{/delete}" method="post">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <input type="hidden" name="personId" th:value="${person.id}"/>
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

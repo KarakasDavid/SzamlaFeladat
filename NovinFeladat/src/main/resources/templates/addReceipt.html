@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form action="/addReceipt" method="POST">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+
+    <p>Please give the needed information.</p>
+
+    <div>
+        <label for="name">Receipt name:</label>
+        <input name="name" id="name" required>
+    </div>
+    <div>
+        <label for="price">Price:</label>
+        <input name="price" id="price" required>
+    </div>
+    <div>
+        <label for="item_name">Item name:</label>
+        <input name="item_name" id="item_name" required>
+    </div>
+    <div>
+        <label for="start_date">Start date:</label>
+        <input name="start_date" id="start_date" type="date" pattern="\d{4}-\d{2}-\d{2}" title="Enter a date in the format yyyy-MM-dd" required>
+    </div>
+
+    <div>
+        <label for="end_date">End date:</label>
+        <input name="end_date" id="end_date" type="date" pattern="\d{4}-\d{2}-\d{2}" title="Enter a date in the format yyyy-MM-dd" required>
+    </div>
+
+    <div>
+        <label for="comment">comment:</label>
+        <input name="comment" id="comment" required>
+    </div>
+    <div>
+        <button type="submit">Add Product</button>
+    </div>
+</form>
+<button onclick="window.history.back()">Back</button>
+</body>
+</html>
